@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global GRC & Marketplace Risk Portfolio | Prashanth Gadipelli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1a202c;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        .chart-container {
+            position: relative;
+            height: 350px;
+            padding: 1rem;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 800px;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-10">
+    <div class="container mx-auto">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">Global GRC & Marketplace Risk Dashboard</h1>
+            <p class="text-lg md:text-xl text-gray-600 mt-2">Senior Security Risk Analyst Portfolio | NIST CSF 2.0, Third-Party Risk & Workflow Automation</p>
+            <div class="text-sm text-gray-500 mt-2">
+                <span><strong>Focus Scope:</strong> Multi-Entity Enterprise Marketplace Architecture</span> | 
+                <span><strong>Framework:</strong> NIST CSF 2.0 / ISO 27001</span>
+            </div>
+        </header>
+
+        <!-- Executive Summary -->
+        <div class="card p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Executive Summary & Program Overview</h2>
+            <p class="text-gray-700 leading-relaxed">
+                This risk portfolio report evaluates governance, risk, and compliance (GRC) metrics across multi-entity enterprise operations. By synthesizing automated gap analyses (leveraging NIST CSF 2.0 evaluation frameworks), third-party vendor risk scoring, policy exception tracking with compensatory controls, and agentic AI workflow automations, this dashboard provides clear, actionable intelligence for both technical and executive stakeholders to maintain risk at an acceptable level as the business scales.
+            </p>
+        </div>
+
+        <!-- Metric KPI Cards (Interactive) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card p-6 flex flex-col items-center justify-center text-center" onclick="showModal('High')">
+                <div class="text-red-500 text-5xl font-bold" id="highCount">3</div>
+                <div class="text-gray-600 font-medium mt-2">High Severity Risk Findings</div>
+            </div>
+            <div class="card p-6 flex flex-col items-center justify-center text-center" onclick="showModal('Medium')">
+                <div class="text-yellow-500 text-5xl font-bold" id="mediumCount">2</div>
+                <div class="text-gray-600 font-medium mt-2">Active Treatment Plans</div>
+            </div>
+            <div class="card p-6 flex flex-col items-center justify-center text-center" onclick="showModal('Low')">
+                <div class="text-green-500 text-5xl font-bold" id="lowCount">2</div>
+                <div class="text-gray-600 font-medium mt-2">Compensating Controls Logged</div>
+            </div>
+            <div class="card p-6 flex flex-col items-center justify-center text-center" onclick="showModal('Scope')">
+                <div class="text-blue-500 text-5xl font-bold" id="scopeCount">106</div>
+                <div class="text-gray-600 font-medium mt-2">NIST CSF 2.0 Subcategories</div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="card">
+                <h3 class="text-xl font-bold text-gray-800 p-6 pb-2">Risk Findings by Severity</h3>
+                <div class="chart-container">
+                    <canvas id="severityChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h3 class="text-xl font-bold text-gray-800 p-6 pb-2">GRC Domain Categories</h3>
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h3 class="text-xl font-bold text-gray-800 p-6 pb-2">Marketplace Business Scope</h3>
+                <div class="chart-container">
+                    <canvas id="networkChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRC Frameworks & Methodology -->
+        <div class="card p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Core GRC Methodology & Tooling</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-gray-100 p-4 rounded-lg flex items-center justify-center flex-col text-center">
+                    <div class="text-xl text-blue-600 font-bold">NIST CSF 2.0 Alignment</div>
+                    <p class="text-sm text-gray-600 mt-2">Evaluates governance, asset management, and supply chain security across all 6 core functions.</p>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg flex items-center justify-center flex-col text-center">
+                    <div class="text-xl text-blue-600 font-bold">Third-Party Risk (TPRM)</div>
+                    <p class="text-sm text-gray-600 mt-2">Assesses vendor integration points across regional logistics networks and external APIs.</p>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg flex items-center justify-center flex-col text-center">
+                    <div class="text-xl text-blue-600 font-bold">Policy Exception Pipeline</div>
+                    <p class="text-sm text-gray-600 mt-2">Tracks un-meet-able policy requests, risk acceptances, and compensatory controls.</p>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg flex items-center justify-center flex-col text-center">
+                    <div class="text-xl text-blue-600 font-bold">Workflow Automation</div>
+                    <p class="text-sm text-gray-600 mt-2">Python and agentic AI scripts keeping risk registers synchronized without manual overhead.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Risk Findings & Findings Breakdown -->
+        <div class="card p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Key Risk Findings & Treatment Tracking</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition" onclick="showModal('High')">
+                    <h4 class="text-lg font-bold text-gray-800">1. Supply Chain Risk Management Gap (GV.SC-01)</h4>
+                    <p class="text-sm text-gray-600 mb-1"><strong>Domain:</strong> Third-Party Risk Management | <strong>Severity:</strong> <span class="text-red-600 font-semibold">High</span></p>
+                    <p class="text-gray-700">Third-party logistics partners connecting into regional marketplace endpoints lacked automated vulnerability reporting and continuous attestation workflows.</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition" onclick="showModal('High')">
+                    <h4 class="text-lg font-bold text-gray-800">2. Legacy S3 Data Archival Policy Exception</h4>
+                    <p class="text-sm text-gray-600 mb-1"><strong>Domain:</strong> Policy Exceptions & Data Protection | <strong>Severity:</strong> <span class="text-red-600 font-semibold">High</span></p>
+                    <p class="text-gray-700">Engineering requested an exception to standard AES-256 storage encryption requirements for historical analytical data dumps due to migration complexity.</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition" onclick="showModal('Medium')">
+                    <h4 class="text-lg font-bold text-gray-800">3. AI Compliance Agent Permission Boundary Drift</h4>
+                    <p class="text-sm text-gray-600 mb-1"><strong>Domain:</strong> AI-Related Risk Governance | <strong>Severity:</strong> <span class="text-yellow-600 font-semibold">Medium</span></p>
+                    <p class="text-gray-700">Internal risk automation AI agents possessed overly broad write privileges over risk register database tables without supervisory approval checkpoints.</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition" onclick="showModal('Low')">
+                    <h4 class="text-lg font-bold text-gray-800">4. Quarterly Access Recertification Latency</h4>
+                    <p class="text-sm text-gray-600 mb-1"><strong>Domain:</strong> Identity & Access Management | <strong>Severity:</strong> <span class="text-green-600 font-semibold">Low</span></p>
+                    <p class="text-gray-700">Manager reviews for internal administrative access privileges experienced periodic scheduling delays, mitigated via automated reminder scripts.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategic Roadmap Section -->
+        <div class="card p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Strategic GRC Implementation Roadmap</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-gray-100 p-4 rounded-lg shadow">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-2">Short-Term (0-3 Months)</h4>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Audit high-risk third-party API connections across regional logistics units.</li>
+                        <li>Deploy automated NIST CSF 2.0 baseline gap checks.</li>
+                        <li>Review and triage pending policy exception requests.</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg shadow">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-2">Medium-Term (3-6 Months)</h4>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Integrate agentic AI compliance validation into CI/CD pipelines.</li>
+                        <li>Establish quantitative risk metrics for engineering leadership.</li>
+                        <li>Scale vendor security questionnaire automation.</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg shadow">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-2">Long-Term (6-12 Months)</h4>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Achieve continuous compliance verification and real-time register updates.</li>
+                        <li>Standardize global marketplace risk assurance frameworks.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="vulnerabilityModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle" class="text-2xl font-bold mb-4"></h3>
+            <div id="modalBody" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <script>
+        const detailsData = {
+            High: [
+                { title: "Supply Chain Risk Management Gap (GV.SC-01)", path: "Third-Party Risk / Vendor Integrations", detail: "Third-party logistics partners connecting into regional marketplace endpoints lacked automated vulnerability reporting. Treatment: Enforced continuous vendor monitoring pipelines and mandatory security attestations." },
+                { title: "Legacy S3 Data Archival Policy Exception", path: "Policy Exceptions / Cloud Storage", detail: "Engineering request to bypass standard encryption-at-rest requirements for historical data dumps. Treatment: Negotiated compensatory controls including network perimeter isolation and tokenized IAM access restrictions." },
+                { title: "Vendor API Static Authentication Deficit", path: "Third-Party Risk / Authentication", detail: "External delivery partner integration relied on static API keys without rotation schedules. Treatment: Mandated strict OAuth 2.0 token expiration policies and mutual TLS." }
+            ],
+            Medium: [
+                { title: "AI Compliance Agent Permission Boundary Drift", path: "AI Risk Governance", detail: "Internal compliance AI assistant scripts possessed excessive write permissions over risk register tables. Treatment: Restricted agent runtime scope to read-only ingestion with human-in-the-loop validation checkpoints." },
+                { title: "Regulatory Feed Synchronization Lag", path: "Threat Intelligence & Compliance", detail: "Manual checks for framework updates created visibility gaps for risk teams. Treatment: Deployed automated intelligence aggregation workflows updating registers every 12 hours." }
+            ],
+            Low: [
+                { title: "Quarterly Access Recertification Latency", path: "Identity & Access Management", detail: "Manager reviews for administrative access experienced scheduling delays. Treatment: Created Python automation scripts to alert resource owners 14 days prior to deadlines." },
+                { title: "NIST CSF Subcategory Documentation Gap", path: "Governance & Risk Register", detail: "Supply chain risk management subcategories lacked granular metric verification. Treatment: Updated risk register tracking views to include quantitative effectiveness scores." }
+            ],
+            Scope: [
+                { title: "Govern Function (GV)", path: "NIST CSF 2.0 Core", detail: "Organizational risk management strategy, cybersecurity supply chain risk management, policies, and oversight." },
+                { title: "Identify Function (ID)", path: "NIST CSF 2.0 Core", detail: "Asset management, risk assessment, and improvement of understanding business cybersecurity risks." },
+                { title: "Protect Function (PR)", path: "NIST CSF 2.0 Core", detail: "Identity management, authentication, access control, awareness education, and data security protection." },
+                { title: "Detect, Respond & Recover (DE, RS, RC)", path: "NIST CSF 2.0 Core", detail: "Continuous monitoring, anomaly detection, incident response planning, and mitigation recovery execution." }
+            ]
+        };
+
+        function renderCharts() {
+            // Severity Chart
+            const severityCtx = document.getElementById('severityChart').getContext('2d');
+            new Chart(severityCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['High Severity', 'Medium Severity', 'Low Severity'],
+                    datasets: [{
+                        data: [3, 2, 2],
+                        backgroundColor: ['rgba(239, 68, 68, 0.8)', 'rgba(245, 158, 11, 0.8)', 'rgba(34, 197, 94, 0.8)'],
+                        borderColor: ['rgba(239, 68, 68, 1)', 'rgba(245, 158, 11, 1)', 'rgba(34, 197, 94, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }
+                }
+            });
+
+            // Category Chart
+            const toolsCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(toolsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Third-Party Risk', 'Policy Exceptions', 'AI Risk Governance', 'Access Control', 'Governance'],
+                    datasets: [{
+                        label: 'Risk Items Tracked',
+                        data: [3, 2, 1, 1, 1],
+                        backgroundColor: 'rgba(79, 70, 229, 0.8)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Network / Marketplace Scope Chart
+            const networkCtx = document.getElementById('networkChart').getContext('2d');
+            new Chart(networkCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Core Marketplace Platform', 'Regional Logistics Network', 'Third-Party API Integrations', 'Corporate Infrastructure'],
+                    datasets: [{
+                        data: [4, 2, 2, 1],
+                        backgroundColor: ['rgba(79, 70, 229, 0.8)', 'rgba(99, 102, 241, 0.8)', 'rgba(129, 140, 248, 0.8)', 'rgba(165, 180, 252, 0.8)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }
+                }
+            });
+        }
+
+        function showModal(category) {
+            const modal = document.getElementById('vulnerabilityModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            modalTitle.textContent = `${category} Risk Findings & Details`;
+            modalBody.innerHTML = '';
+
+            const items = detailsData[category] || [];
+            if (items.length > 0) {
+                items.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-gray-50 p-4 rounded-lg shadow';
+                    card.innerHTML = `
+                        <h4 class="text-lg font-bold text-gray-800 mb-1">${item.title}</h4>
+                        <div class="text-sm text-gray-500 mb-2">Domain/Scope: <span class="font-semibold text-gray-700">${item.path}</span></div>
+                        <p class="text-gray-700">${item.detail}</p>
+                    `;
+                    modalBody.appendChild(card);
+                });
+            } else {
+                modalBody.innerHTML = `<p class="text-gray-500">No ${severity.toLowerCase()} priority items to display.</p>`;
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('vulnerabilityModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('vulnerabilityModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+
+        window.onload = renderCharts;
+    </script>
+</body>
+</html>
+
